@@ -111,7 +111,6 @@ local function onMotion(_, address, relX, relY, relZ, entity)
         autoUnlockTimer = cancelTimer(autoUnlockTimer)
         autoUnlockTimer = event.timer(8, function()
             lock = false
-            sp.say("All clear. Unless it’s another chicken.")
         end)
         return
     end
@@ -121,7 +120,7 @@ local function onMotion(_, address, relX, relY, relZ, entity)
     --if not lock and ((relX >= -3 and relX < 0 and relZ > 0 and relZ < 2 and relY > -2 and relY < 5) or (relX <= 5 and relX > 0 and relZ >= -5 and relZ < 0 and relY < 6)) then
     
     --this ones for the north
-    if not lock and ((relX >= -3 and relX < 0 and relZ > 0 and relZ < 2 and relY > -2 and relY < 5) or (relX < 0 and relX >= -3 and relZ > 0 and relZ <= 5 and relY < 6)) then    
+    if not lock and ((relX >= -3 and relX < 0 and relZ > 0 and relZ < 2 and relY > -2 and relY < 5) or (relX < 0 and relX >= -3 and relZ >= -5 and relZ < 0 and relY < 6)) then    
         say(pickVoiceLine("allowed"))
         autoShutTimer = cancelTimer(autoShutTimer)
         rs.setOutput({0,0,0,0,0,0})
