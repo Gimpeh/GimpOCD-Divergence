@@ -1,5 +1,5 @@
 local widgetsAreUs = require("lib.widgetsAreUs")
-local c = require("gimpColors")
+local c = require("lib.gimpColors")
 local event = require("event")
 local s = require("serialization")
 local component = require("component")
