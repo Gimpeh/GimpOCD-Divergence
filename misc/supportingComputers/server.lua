@@ -53,7 +53,8 @@ component.modem.open(biodieselPort)
 local biodieselTransposer = component.proxy("3aad8060-033d-4ea4-b7c0-2188b1a27b03")
 
 local function getBiodiesel()
-    return biodieselTransposer.getFluidInTank(sides.south)
+  local stupidDoubleTable = biodieselTransposer.getFluidInTank(sides.south)
+  return stupidDoubleTable[1]
 end
 
 local function sendBiodieselStats()
