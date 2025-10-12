@@ -18,6 +18,11 @@ local function onModemMessage(eventName, address, address2, port, distance, mess
         if stats then
             powerDisplay.update(stats)
         end
+    elseif port == 101 then
+        local stats = s.unserialize(message)
+        if stats then
+            powerDisplay.update(stats)
+        end
     end
 end
 

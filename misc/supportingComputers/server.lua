@@ -1,5 +1,6 @@
 local component = require("component")
 local serialization = require("serialization")
+local sides = require("sides")
 
 local server = {}
 server.capacitors = {}
@@ -7,6 +8,7 @@ local capacitorControl = component.proxy("8103930b-8a69-44a4-bdae-d8ac9de62aae")
 local powerPort = 100
 component.modem.open(powerPort)
 
+------------------------------
 
 for k, v in component.list("ie_hv_capacitor") do
   table.insert(server.capacitors, component.proxy(k))
@@ -28,7 +30,7 @@ local function getMaxEnergy()
   return maxEnergy
 end
 
-while true do
+local function sendPowerStats()
     local stats = {}
     stats.totalEnergy = getTotalEnergy()
     stats.maxEnergy = getMaxEnergy()
@@ -41,6 +43,27 @@ while true do
     end
 
     component.modem.broadcast(powerPort, serialization.serialize(stats))
+end
+
+-----------------------------
+
+local biodieselPort = 101
+component.modem.open(biodieselPort)
+
+local biodieselTransposer = component.proxy("3aad8060-033d-4ea4-b7c0-2188b1a27b03")
+
+local function getBiodiesel()
+    return biodieselTransposer.getFluidInTank(sides.south)
+end
+
+local function sendBiodieselStats()
+    component.modem.broadcast(biodieselPort, serialization.serialize(getBiodiesel()))
+end
+-----------------------------
+
+while true do
+    sendPowerStats()
+    sendBiodieselStats()
     os.sleep(10)
 end
 

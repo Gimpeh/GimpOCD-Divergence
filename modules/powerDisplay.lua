@@ -13,14 +13,17 @@ powerDisplay.onModemMessage = nil
 
 local function widget(x, y)
     local widget = {}
-    widget.backgroundBox = widgetsAreUs.createBox(x, y, 203, 86, {0, 0, 0}, 0.8)
-    widget.backgroundInterior = widgetsAreUs.createBox(x + 2, y + 2, 199, 82, {1, 1, 1}, 0.7)
+    widget.backgroundBox = widgetsAreUs.createBox(x+30, y, 203, 86, {0, 0, 0}, 0.8)
+    widget.backgroundInterior = widgetsAreUs.createBox(x + 32, y + 2, 199, 82, {1, 1, 1}, 0.7)
     widget.header = widgetsAreUs.text(x+33,y+10,"Power Metrics", 2)
     widget.powerCurrentLabel = widgetsAreUs.text(x+9, y+40, "RF:", 2)
     widget.powerCurrent = widgetsAreUs.text(x+50, y+40, "Placeholder", 2)
     widget.powerBarBackground = widgetsAreUs.createBox(x+10, y+62, 180, 15, {0,0,0}, 0.7)
-    widget.powerBar = widgetsAreUs.createBox(x+10, y+62, 0, 15, {1,1,0}, 0.7)
+    widget.powerBar = widgetsAreUs.createBox(x+10, y+62, 0, 15, {0,1,0}, 0.7)
     widget.powerPercentage = widgetsAreUs.text(x+150, y+40, "xx%", 1.7)
+    widget.dieselBarBackground = widgetsAreUs.createBox(x, y, 25, 86, {0,0,0,}, 0.8)
+    widget.dieselBar = widgetsAreUs.createBox(x, y, 25, 0, {1,1,0}, 0.7)
+    widget.dieselPercent = widgetsAreUs.text(x+3, y+40, "xx%", 1.7)
 
     widget.setVisible = function(visible)
         widget.backgroundBox.setVisible(visible)
@@ -31,6 +34,9 @@ local function widget(x, y)
         widget.powerBarBackground.setVisible(visible)
         widget.powerBar.setVisible(visible)
         widget.powerPercentage.setVisible(visible)
+        widget.dieselBarBackground.setVisible(visible)
+        widget.dieselBar.setVisible(visible)
+        widget.dieselPercent.setVisible(visible)
     end
     widget.remove = function()
         component.glasses.remove(widget.backgroundBox.getID())
@@ -41,14 +47,24 @@ local function widget(x, y)
         component.glasses.remove(widget.powerBarBackground.getID())
         component.glasses.remove(widget.powerBar.getID())
         component.glasses.remove(widget.powerPercentage.getID())
+        component.glasses.remove(widget.dieselBarBackground.getID())
+        component.glasses.remove(widget.dieselBar.getID())
+        component.glasses.remove(widget.dieselPercent.getID())
     end
     widget.update = function(stats)
-        widget.powerCurrent.setText(tostring(stats.totalEnergy))
+        if stats.totalEnergy then
+            widget.powerCurrent.setText(tostring(stats.totalEnergy))
 
-        local percentage = math.floor(stats.energyPercentage)
-        widget.powerPercentage.setText(tostring(percentage) .. "%")
-        local size = math.floor((percentage / 100) * 180)
-        widget.powerBar.setSize(15, size)
+            local percentage = math.floor(stats.energyPercentage)
+            widget.powerPercentage.setText(tostring(percentage) .. "%")
+            local size = math.floor((percentage / 100) * 180)
+            widget.powerBar.setSize(15, size)
+        elseif stats.name then
+            local percentage = math.floor((stats.amount / stats.capacity) * 100)
+            widget.dieselPercent.setText(tostring(percentage) .. "%")
+            local size = math.floor((percentage / 100) * 86)
+            widget.dieselBar.setSize(25, size)
+        end
     end
     return widgetsAreUs.attachCoreFunctions(widget)
 end
