@@ -294,7 +294,7 @@ end
 function widgetsAreUs.notification(x, y, text, duration)
     duration = duration or nil
     local notification = {}
-    notification.box = widgetsAreUs.createBox(x, y, 200, 30, c.beige, 0.5)
+    notification.box = widgetsAreUs.createBox(x, y, 300, 30, c.beige, 0.5)
     notification.text = widgetsAreUs.text(x + 3, y + 8, text, 1.2)
 
     notification.remove = function()
