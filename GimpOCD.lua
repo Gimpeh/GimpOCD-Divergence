@@ -1,3 +1,5 @@
+package.path = package.path .. ";/home/gimpOCD/?.lua"
+
 local event = require("event")
 local widgetsAreUs = require("lib.widgetsAreUs")
 local component = require("component")

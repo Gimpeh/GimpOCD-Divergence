@@ -19,6 +19,4 @@ os.execute("wget -f https://raw.githubusercontent.com/Gimpeh/GimpOCD-Divergence/
 os.execute("wget -f https://raw.githubusercontent.com/Gimpeh/GimpOCD-Divergence/refs/heads/main/modules/powerDisplay.lua /home/GimpOCD/modules/powerDisplay.lua")
 
 print("Installation complete!")
-print("run GimpOCD from the command line to start")
-print("If accelerating, include the acceleration multiplier as an arg (e.g. GimpOCD 128)")
 os.execute("rm setup.lua")
