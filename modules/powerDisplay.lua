@@ -23,7 +23,7 @@ local function widget(x, y)
     widget.powerPercentage = widgetsAreUs.text(x+180, y+40, "xx%", 1.7)
     widget.dieselBarBackground = widgetsAreUs.createBox(x, y, 25, 86, {0,0,0,}, 0.8)
     widget.dieselBar = widgetsAreUs.createBox(x, y, 25, 0, {1,1,0}, 0.7)
-    widget.dieselPercent = widgetsAreUs.text(x+3, y+40, "xx%", 1)
+    widget.dieselPercent = widgetsAreUs.text(x+3, y+40, "xx%", 1, c.white)
 
     widget.setVisible = function(visible)
         widget.backgroundBox.setVisible(visible)
