@@ -6,6 +6,8 @@ local component = require("component")
 local s = require("serialization")
 local powerDisplay = require("modules.powerDisplay")
 
+component.glasses.removeAll()
+
 component.modem.open(100)
 component.modem.open(101)
 
