@@ -111,3 +111,5 @@ powerDisplay.setVisible = function(visible)
         powerDisplay.widget.setVisible(visible)
     end
 end
+
+return powerDisplay
