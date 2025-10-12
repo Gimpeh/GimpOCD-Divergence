@@ -12,6 +12,7 @@ component.modem.open(101)
 
 local initAlert = widgetsAreUs.notification(200, 100, "Take off your glasses and put them back on")
 local _, _, playerName, xRes, yRes = event.pull("glasses_on")
+initAlert.remove()
 
 powerDisplay.init(xRes)
 
