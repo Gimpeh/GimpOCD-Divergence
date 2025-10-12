@@ -5,6 +5,7 @@ local s = require("serialization")
 local powerDisplay = require("modules.powerDisplay")
 
 component.modem.open(100)
+component.modem.open(101)
 
 
 local initAlert = widgetsAreUs.notification(200, 100, "Take off your glasses and put them back on")
