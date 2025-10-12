@@ -71,7 +71,7 @@ end
 
 function powerDisplay.init(resX)
     local suc, err = pcall(function()
-        local popUp = widgetsAreUs.popUp(resX -200, 1, 190, 100,
+        local popUp = widgetsAreUs.popUp(400, 250, 190, 100,
             "Left Click to Set Position",
             "Right Click to Set Position from ends",
             "Middle Click to Accept"
