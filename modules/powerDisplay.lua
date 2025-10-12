@@ -63,7 +63,7 @@ local function widget(x, y)
             local percentage = math.floor((stats.amount / stats.capacity) * 100)
             widget.dieselPercent.setText(tostring(percentage) .. "%")
             local size = math.floor((percentage / 100) * 86)
-            widget.dieselBar.setSize(25, size)
+            widget.dieselBar.setSize(size, 25)
         end
     end
     return widgetsAreUs.attachCoreFunctions(widget)
