@@ -69,8 +69,8 @@ local function widget(x, y)
     return widgetsAreUs.attachCoreFunctions(widget)
 end
 
-function powerDisplay.init()
-    local suc, err = pcall(function(resX)
+function powerDisplay.init(resX)
+    local suc, err = pcall(function()
         local popUp = widgetsAreUs.popUp(resX -200, 1, 190, 100,
             "Left Click to Set Position",
             "Right Click to Set Position from ends",
