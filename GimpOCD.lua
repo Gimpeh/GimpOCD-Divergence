@@ -1,35 +1,59 @@
+----------import libraries
+--- 
 package.path = package.path .. ";/home/gimpOCD/?.lua"
-
-local event = require("event")
-local widgetsAreUs = require("lib.widgetsAreUs")
-local component = require("component")
-local s = require("serialization")
-local powerDisplay = require("modules.powerDisplay")
-
-component.glasses.removeAll()
-
-component.modem.open(100)
-component.modem.open(101)
+local eventManager = require("GimpOCD.gimp_eevents")
+local windowManager = require("GimpOCD.window_manager")
 
 
-local initAlert = widgetsAreUs.notification(200, 100, "Take off your glasses and put them back on")
-local _, _, playerName, xRes, yRes = event.pull("glasses_on")
-initAlert.remove()
 
-powerDisplay.init(xRes)
+----------------------------------------------------------------------------------------------------------------
+---------------------------------- CONFIGURATIONS --------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+                                                                                                            --|
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
 
-local function onModemMessage(eventName, address, address2, port, distance, message)
-    if port == 100 then
-        local stats = s.unserialize(message)
-        if stats then
-            powerDisplay.update(stats)
-        end
-    elseif port == 101 then
-        local stats = s.unserialize(message)
-        if stats then
-            powerDisplay.update(stats)
-        end
-    end
+
+----------- get launch args
+local shell = require("shell")
+local args, options = shell.parse(...)
+local function setArgsAndOpts(argsTable, optsTable)
+    --we dont do this... yet at least
+    return true
 end
 
-event.listen("modem_message", onModemMessage)
+
+
+local event_manager = require("GimpOCD.gimp_eevents")

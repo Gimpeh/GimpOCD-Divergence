@@ -241,6 +241,13 @@ function widgetsAreUs.searchBar(x, y, length)
     })
 end
 
+function widgetsAreUs.button(x, y, buttonSymbol)
+    local button = {}
+    button.box = widgetsAreUs.createBox(x, y, 20, 20, c.navbutton, 0.8)
+    button.text = widgetsAreUs.text(x + 6, y + 3, buttonSymbol, 1.5, c.white)
+    return widgetsAreUs.attachCoreFunctions(button)
+end
+
 --------------complete Widgets---------------------
 
 ------Object Widgets-------
