@@ -1,8 +1,6 @@
-local widgetsAreUs = require("lib.widgetsAreUs")
-local contextMenu = require("lib.contextMenu")
-local modules = require("lib.modules.modules")
-local component = require("component")
-local event = require("event")
+local widgetsAreUs = require("GimpOCD-Divergence.lib.widgetsAreUs")
+local contextMenu = require("GimpOCD-Divergence.lib.contextMenu")
+local modules = require("GimpOCD-Divergence.GimpOCD.modules.modules")
 
 local configurableWindows = {}
 
@@ -10,9 +8,6 @@ local horizontalSteps = 4
 local verticalSteps = 9
 local xThresholds = {}
 local yThresholds = {}
-
-
---need to get glasses resolution
 
 
 function configurableWindows.init(res)
@@ -58,15 +53,19 @@ function configurableWindows.onClick(eventName, address, player, x, y, button)
 end
 
 function configurableWindows.onClickRight(eventName, address, player, x, y, button)
-    if eventName ~= "hud_click" or button ~= 1 then return false end
+    if eventName ~= "hud_click" or button ~= 1 then print("onClickRight Failed Check") return false end
+    print("onClickRight Passed Check")
     if configurableWindows.selectionWindow and configurableWindows.selectionWindow.contains(x, y) then
+        print("onClickRight Passed Contains Check")
+        local x1, y1 = configurableWindows.selectionWindow.getPosition()
+        local height, width = configurableWindows.selectionWindow.getSize()
         local function menuArgTable()
             local argTable = {}
-            for k, mod in pairs(modules) do
+            for k, mod in pairs(modules.modules) do
                 local tbl = {
                     text = k,
-                    func = modules[k],
-                    args = {}
+                    func = mod,
+                    args = {x1, y1, width, height}
                 }
                 table.insert(argTable, tbl)
             end

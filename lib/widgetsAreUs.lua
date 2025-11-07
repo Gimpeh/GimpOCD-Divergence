@@ -1,4 +1,4 @@
-local c = require("lib.gimp_colors")
+local c = require("GimpOCD-Divergence.lib.gimpColors")
 local event = require("event")
 local component = require("component")
 
@@ -63,7 +63,7 @@ end
 --- Trims whitespace and control characters from a string.
 --- mainly used to clean up getText() results from widget text objects
 function widgetsAreUs.trim(s)
-    return (s:gsub("^%s*(.-)%s*$", "%1")):gsub("%c", "")
+    return s:gsub("%c", "")
 end
 
 --- Converts large numbers into human-readable shorthand notation (e.g. 1500 -> 1.50k)
@@ -97,7 +97,8 @@ end
 function widgetsAreUs.flash(widgetObject, color, flashDuration)
     color = color or c.clicked
     flashDuration = flashDuration or 0.2
-    local originalColor = {widgetObject.getColor()}
+    local r, g, b = widgetObject.getColor()
+    local originalColor = {r, g, b}
     widgetObject.setColor(table.unpack(color))
     event.timer(flashDuration, function()
         widgetObject.setColor(table.unpack(originalColor))
@@ -228,16 +229,34 @@ end
 function widgetsAreUs.searchBar(x, y, length)
     local box = widgetsAreUs.createBox(x, y, length, 20, c.objectinfo, 0.7)
     local text = widgetsAreUs.text(x + 3, y + 5, "Search", 1)
+    local getText = function()
+        return text.getText()
+    end
+    local setText = function(newText)
+        text.setText(newText)
+    end
+    local onClick = function()
+        while true do
+            local eventName, address, player, char, dunno = event.pull("hud_keyboard")
+            if char == 13 then
+                break
+            elseif char == 8 then
+                local currentText = widgetsAreUs.trim(text.getText())
+                setText(currentText:sub(1, -2))
+            else
+                local letter = string.char(char)
+                local currentText = widgetsAreUs.trim(text.getText())
+                setText(currentText .. letter)
+            end
+        end
+    end
 
     return widgetsAreUs.attachCoreFunctions({
         box = box,
         text = text,
-        getText = function()
-            return text.getText()
-        end,
-        setText = function(newText)
-            text.setText(newText)
-        end
+        getText = getText,
+        setText = setText,
+        onClick = onClick
     })
 end
 
@@ -277,6 +296,7 @@ function widgetsAreUs.itemBox(x, y, itemStack)
         name = name,
         icon = icon,
         amount = amount,
+        itemStack = itemStack,
         update = function()
             local updatedItemStack = component.me_interface.getItemsInNetwork({
                 label = itemStack.label,
@@ -322,6 +342,17 @@ function widgetsAreUs.notification(x, y, text, duration)
     return widgetsAreUs.attachCoreFunctions(notification)
 end
 
+---@param x number @Horizontal position on screen.
+---@param y number @Vertical position on screen.
+---@param width number @Width of the pop-up box.
+---@param height number @Height of the pop-up box.
+---@param line1 string @First line of text.
+---@param line2 string|nil @Optional second line of text.
+---@param line3 string|nil @Optional third line of text.
+---@param line4 string|nil @Optional fourth line of text.
+---@param line5 string|nil @Optional fifth line of text.
+---@param line6 string|nil @Optional sixth line of text.
+---@return table @Pop-up HUD object with multiple lines of text and a remove() method.
 function widgetsAreUs.popUp(x, y, width, height, line1, line2, line3, line4, line5, line6)
     local widget = {}
     widget.box = widgetsAreUs.createBox(x, y, width, height, c.beige, 0.5)

@@ -4,7 +4,7 @@ pagedWindow.__index = pagedWindow
 
 ---@class windowOfPages
 ---@field displayItems fun(self: windowOfPages) @Clears and redraws the current page of items
----@field ClearDisplayedItems fun(self: windowOfPages) @Clears all currently displayed items
+---@field clearDisplayedItems fun(self: windowOfPages) @Clears all currently displayed items
 ---@field nextPage fun(self: windowOfPages) @Advances to the next page, if there is one, and redraws the items
 ---@field prevPage fun(self: windowOfPages) @Goes back to the previous page
 ---@field items function|table @Either a method that takes an index and returns an object, or a table of objects
@@ -72,57 +72,67 @@ function pagedWindow:clearDisplayedItems()
 end
 
 function pagedWindow:displayItems()
-        self:clearDisplayedItems()
+    print("Attempting to display items")
+    self:clearDisplayedItems()
 
-        local items = {}
-        local startIndex
-        local endIndex
-        if type(self.items) == "function" then
-            for i = ((self.currentPage * self.itemsPerPage)-self.itemsPerPage)+1, self.currentPage * self.itemsPerPage do
-                local suc, err = pcall(function()
-                    local item = self.items(i)
-                    if not item then
-                        table.insert(items, "nil nil nillie")
-                    else
-                        table.insert(items, item)
-                    end
-                end)
-                if not suc then
-                    break
+    local items = {}
+    local startIndex
+    local endIndex
+
+    local itemSlotNumbers = {}
+
+    if type(self.items) == "function" then
+        print("Items is a function")
+        for i = ((self.currentPage * self.itemsPerPage)-self.itemsPerPage)+1, self.currentPage * self.itemsPerPage do
+            local suc, err = pcall(function()
+                local item = self.items(i)
+                if not item then
+                    table.insert(items, "nil nil nillie")
+                else
+                    table.insert(items, item)
                 end
-            end
-            startIndex = 1
-            endIndex = #items
-        elseif type(self.items) == "table" then
-            items = self.items
-            startIndex = (self.currentPage - 1) * self.itemsPerPage + 1
-            endIndex = math.min(self.currentPage * self.itemsPerPage, #self.items)
-        end
-
-        for i = startIndex, endIndex do
-            local row = math.floor((i - startIndex) / self.itemsPerRow)
-            local col = (i - startIndex) % self.itemsPerRow
-            local x = self.screenX1 + col * (self.itemWidth + self.padding)
-            local y = self.screenY1 + row * (self.itemHeight + self.padding)
-
-            local item = items[i]
-            local itemSlotNumber = self.itemsPerPage * (self.currentPage - 1) + i
-
-            if item and item ~= "nil nil nillie" then
-                local displayedItem = self.renderItem(x, y, item, table.unpack(self.args))
-                table.insert(self.currentlyDisplayed, {displayedItem, itemSlotNumber})
+            end)
+            if not suc then
+                print("Error occurred while fetching item:", err)
+                break
             end
         end
+        startIndex = 1
+        endIndex = #items
+    elseif type(self.items) == "table" then
+        for k, v in ipairs(self.items) do
+            table.insert(items, v[1])
+            table.insert(itemSlotNumbers, v[2])
+        end
+        startIndex = (self.currentPage - 1) * self.itemsPerPage + 1
+        endIndex = math.min(self.currentPage * self.itemsPerPage, #self.items)
+    end
+
+    for i = startIndex, endIndex do
+        local row = math.floor((i - startIndex) / self.itemsPerRow)
+        local col = (i - startIndex) % self.itemsPerRow
+        local x = self.screenX1 + col * (self.itemWidth + self.padding)
+        local y = self.screenY1 + row * (self.itemHeight + self.padding)
+
+        local item = items[i]
+        local itemSlotNumber = itemSlotNumbers[i] or self.itemsPerPage * (self.currentPage - 1) + i
+
+        if item and item ~= "nil nil nillie" then
+            local displayedItem = self.renderItem(x, y, item, table.unpack(self.args))
+            table.insert(self.currentlyDisplayed, {displayedItem, itemSlotNumber})
+        end
+    end
 end
 
 function pagedWindow:nextPage()
     local totalPages
     if type(self.items) == "table" then
-        totalPages = math.ceil(#self.items / self.itemsPerPage)
+        totalPages = math.floor(#self.items / self.itemsPerPage)
     elseif type(self.items) == "function" then
         local suc, err = pcall(function() return self.items((self.currentPage * self.itemsPerPage)+1) end)
         if suc then
             totalPages = self.currentPage + 1
+            
         end
     else
         totalPages = 0

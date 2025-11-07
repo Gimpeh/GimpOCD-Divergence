@@ -1,5 +1,5 @@
-local widgetsAreUs = require("lib.widgetsAreUs")
-local c = require("lib.gimpColors")
+local widgetsAreUs = require("GimpOCD-Divergence.lib.widgetsAreUs")
+local c = require("GimpOCD-Divergence.lib.gimpColors")
 local event = require("event")
 local s = require("serialization")
 local component = require("component")
@@ -70,7 +70,7 @@ local function widget(x, y)
     return widgetsAreUs.attachCoreFunctions(widget)
 end
 
-function powerDisplay.init(resX)
+function powerDisplay.init()
     local suc, err = pcall(function()
         local popUp = widgetsAreUs.popUp(400, 250, 190, 100,
             "Left Click to Set Position",

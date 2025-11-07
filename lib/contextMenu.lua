@@ -1,18 +1,18 @@
 local contextMenu = {}
-local widgetsAreUs = require("lib.widgetsAreUs")
-local c = require("lib.gimpColors")
+local widgetsAreUs = require("GimpOCD-Divergence.lib.widgetsAreUs")
+local c = require("GimpOCD-Divergence.lib.gimpColors")
 local component = require("component")
 
 contextMenu.remove = nil
 
 local choiceHeight = 10
 
----@param x2 x
----@param y2 y
----@param funcTable funcTable
----@param funcTable.text contextMenuOptionText
----@param funcTable.func onClick
----@param funcTable.args args for onClick
+---@alias ContextMenuEntry { text: string, func: fun(), args?: table }
+
+---Creates a context menu at the given screen coordinates
+---@param x2 number @X coordinate
+---@param y2 number @Y coordinate
+---@param funcTable ContextMenuEntry[] @A list of menu entries to display
 function contextMenu.init(x2, y2, funcTable)
     --[[
     funcTable = {
