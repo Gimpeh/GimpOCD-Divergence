@@ -41,30 +41,35 @@ local function assignItemBoxClicks(displayed)
                 {
                     text = "To Furnace",
                     func = function()
+                        widget.remove()
                         component.modem.broadcast(110, "toFurnace", slot)
                     end
                 },
                 {
                     text = "To Crusher",
                     func = function()
+                        widget.remove()
                         component.modem.broadcast(110, "toCrusher", slot)
                     end
                 },
                 {
                     text = "To Smeltery",
                     func = function()
+                        widget.remove()
                         component.modem.broadcast(110, "toSmeltery", slot)
                     end
                 },
                 {
                     text = "To Grinder",
                     func = function()
+                        widget.remove()
                         component.modem.broadcast(110, "toGrinder", slot)
                     end
                 },
                 {
                     text = "To Assembly",
                     func = function()
+                        widget.remove()
                         component.modem.broadcast(110, "toAssembly", slot)
                     end
                 }
